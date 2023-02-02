@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "k8senricherissue": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7255"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 31593,
+      "useSSL": false
+    }
+  }
+}

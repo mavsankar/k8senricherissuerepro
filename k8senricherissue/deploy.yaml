@@ -1,0 +1,40 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8senricherissue-deployment
+  labels:
+    app: k8senricherissue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8senricherissue
+  template:
+    metadata:
+      labels:
+        app: k8senricherissue
+    spec:     
+      containers:
+        - name: k8senricherissue-container
+          image: k8senricherissue:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep","120"]
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            periodSeconds: 30
+            timeoutSeconds: 30
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 512Mi
