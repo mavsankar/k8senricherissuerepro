@@ -25,11 +25,12 @@
 * Add reference to to these package:
 
     ```xml
+    ...
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.Kubernetes" Version="6.1.0-beta1" />
+    ...
     ```
+    > ⚠️ Note: `Microsoft.ApplicationInsights.Kubernetes 6.1.0-beta1` or higher version is required.
 
 * Skip clean output, refer to [k8senricherissue.csproj](./k8senricherissue/k8senricherissue.csproj) for details.
 
@@ -44,10 +45,10 @@
 
     ```csharp
     // Set skipRegisterBackendService to true to avoid registering hosted service, which is not supported in Azure Function.
-    builder.Services.AddApplicationInsightsKubernetesEnricher(LogLevel.Trace, skipRegisterBackendService: true);
+    builder.Services.AddApplicationInsightsKubernetesEnricher(LogLevel.Trace, disableBackgroundService: true);
     ```
     
-* Build another service to `manaully` bootstrap Application Insights for Kubernetes. Refer to [ApplicationInsightsK8sBootstrap.cs](k8senricherissue/ApplicationInsightsK8sBootstrap.cs) for an example:
+* Build another service to **manually** bootstrap Application Insights for Kubernetes. Refer to [ApplicationInsightsK8sBootstrap.cs](k8senricherissue/ApplicationInsightsK8sBootstrap.cs) for an example:
 
     ```csharp
     public class ApplicationInsightsK8sBootstrap

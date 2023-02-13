@@ -14,7 +14,7 @@ namespace k8senricherissue
 
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddApplicationInsightsKubernetesEnricher(LogLevel.Trace, skipRegisterBackendService: true);
+            builder.Services.AddApplicationInsightsKubernetesEnricher(LogLevel.Trace, disableBackgroundService: true);
         }
     }
 }
