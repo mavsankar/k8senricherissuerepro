@@ -40,8 +40,42 @@
     ```
 
 * Create / Update `Startup.cs`. See [Startup.cs](./k8senricherissue/Startup.cs) for an example.
-  * Update needed to bypass the registering the hosted service - no public package yet.
+  * Update needed to bypass the registering the services - no public package yet.
 
+    ```csharp
+    // Set skipRegisterBackendService to true to avoid registering hosted service, which is not supported in Azure Function.
+    builder.Services.AddApplicationInsightsKubernetesEnricher(LogLevel.Trace, skipRegisterBackendService: true);
+    ```
+    
+* Build another service to `manaully` bootstrap Application Insights for Kubernetes. Refer to [ApplicationInsightsK8sBootstrap.cs](k8senricherissue/ApplicationInsightsK8sBootstrap.cs) for an example:
+
+    ```csharp
+    public class ApplicationInsightsK8sBootstrap
+    {
+        private readonly IK8sInfoBootstrap _bootstrap;
+        private bool _ran = false;
+
+        public ApplicationInsightsK8sBootstrap(IK8sInfoBootstrap bootstrap)
+        {
+            _bootstrap = bootstrap ?? throw new ArgumentNullException(nameof(bootstrap));
+        }
+
+        [FunctionName("AIK8sBootstrap")]
+        public void Run(
+            [TimerTrigger("0 */5 * * * *", RunOnStartup = true)] TimerInfo myTimer,
+            ILogger log)
+        {
+            if(_ran)
+            {
+                return;
+            }
+            
+            _ran = true;
+            log.LogInformation("Starting AIK8s Bootstrap");
+            _bootstrap.Run();
+        }
+    }
+    ```
 
 ## Issues Summary
 
